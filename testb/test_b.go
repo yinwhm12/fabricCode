@@ -7,11 +7,11 @@ import (
 	"strconv"
 )
 
-type TestB struct {
+type SimpleChaincode struct {
 
 }
 
-func (t *TestB)Init(stud shim.ChaincodeStubInterface) peer.Response  {
+func (t *SimpleChaincode)Init(stud shim.ChaincodeStubInterface) peer.Response  {
 	fmt.Println("hello TestA")
 	_, args := stud.GetFunctionAndParameters()
 	var A string
@@ -34,7 +34,7 @@ func (t *TestB)Init(stud shim.ChaincodeStubInterface) peer.Response  {
 	return shim.Success(nil)
 }
 
-func (t *TestB)Invoke(stud shim.ChaincodeStubInterface)peer.Response  {
+func (t *SimpleChaincode)Invoke(stud shim.ChaincodeStubInterface)peer.Response  {
 	fmt.Println("TestA Invoke noding")
 	fun, args := stud.GetFunctionAndParameters()
 	if fun == "query"{
@@ -43,18 +43,18 @@ func (t *TestB)Invoke(stud shim.ChaincodeStubInterface)peer.Response  {
 		//return stud.InvokeChaincode(fun,toChaincodeArgs(args[0]),args[1])
 		//return shim.Success([]byte("no any more functions"))
 		if len(args) < 1{
-			args[0] = "testB"
+			args[0] = "SimpleChaincode"
 		}
 		return t.hello(stud,args[0])
 	}
 }
 
-func (t *TestB)hello(stud shim.ChaincodeStubInterface,str string)peer.Response  {
+func (t *SimpleChaincode)hello(stud shim.ChaincodeStubInterface,str string)peer.Response  {
 	return shim.Success([]byte(str))
 
 }
 
-func (t *TestB)query(stub shim.ChaincodeStubInterface, args []string)peer.Response  {
+func (t *SimpleChaincode)query(stub shim.ChaincodeStubInterface, args []string)peer.Response  {
 	var A string // Entities
 	var err error
 
@@ -83,7 +83,7 @@ func (t *TestB)query(stub shim.ChaincodeStubInterface, args []string)peer.Respon
 }
 
 func main()  {
-	err := shim.Start(new(TestB))
+	err := shim.Start(new(SimpleChaincode))
 	if err != nil{
 		fmt.Printf("Error starting Simple chaincode: %s", err)
 	}

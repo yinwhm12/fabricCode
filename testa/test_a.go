@@ -2,17 +2,17 @@ package main
 
 import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
-	"github.com/hyperledger/fabric/protos/peer"
+	pb "github.com/hyperledger/fabric/protos/peer"
 	"fmt"
 	"strconv"
 )
 
-type TestA struct {
+type SimpleChaincode struct {
 
 }
 
-func (t *TestA)Init(stud shim.ChaincodeStubInterface) peer.Response  {
-	fmt.Println("hello TestA")
+func (t *SimpleChaincode)Init(stud shim.ChaincodeStubInterface) pb.Response  {
+	fmt.Println("hello SimpleChaincode")
 	_, args := stud.GetFunctionAndParameters()
 	var A string
 	var Aval int
@@ -34,8 +34,8 @@ func (t *TestA)Init(stud shim.ChaincodeStubInterface) peer.Response  {
 	return shim.Success(nil)
 }
 
-func (t *TestA)Invoke(stud shim.ChaincodeStubInterface)peer.Response  {
-	fmt.Println("TestA Invoke noding")
+func (t *SimpleChaincode)Invoke(stud shim.ChaincodeStubInterface)pb.Response  {
+	fmt.Println("SimpleChaincode Invoke noding")
 	fun, args := stud.GetFunctionAndParameters()
 	if fun == "query"{
 		return t.query(stud,args)
@@ -54,7 +54,7 @@ func toChaincodeArgs(args ...string) [][]byte {
 
 
 
-func (t *TestA)query(stub shim.ChaincodeStubInterface, args []string)peer.Response  {
+func (t *SimpleChaincode)query(stub shim.ChaincodeStubInterface, args []string)peer.Response  {
 	var A string // Entities
 	var err error
 
@@ -83,7 +83,7 @@ func (t *TestA)query(stub shim.ChaincodeStubInterface, args []string)peer.Respon
 }
 
 func main()  {
-	err := shim.Start(new(TestA))
+	err := shim.Start(new(SimpleChaincode))
 	if err != nil{
 		fmt.Printf("Error starting Simple chaincode: %s", err)
 	}
