@@ -1,4 +1,4 @@
-package main
+package testb
 
 import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -7,11 +7,11 @@ import (
 	"strconv"
 )
 
-type TestA struct {
+type TestB struct {
 
 }
 
-func (t *TestA)Init(stud shim.ChaincodeStubInterface) peer.Response  {
+func (t *TestB)Init(stud shim.ChaincodeStubInterface) peer.Response  {
 	fmt.Println("hello TestA")
 	_, args := stud.GetFunctionAndParameters()
 	var A string
@@ -34,27 +34,27 @@ func (t *TestA)Init(stud shim.ChaincodeStubInterface) peer.Response  {
 	return shim.Success(nil)
 }
 
-func (t *TestA)Invoke(stud shim.ChaincodeStubInterface)peer.Response  {
+func (t *TestB)Invoke(stud shim.ChaincodeStubInterface)peer.Response  {
 	fmt.Println("TestA Invoke noding")
 	fun, args := stud.GetFunctionAndParameters()
 	if fun == "query"{
 		return t.query(stud,args)
 	}else{
-		return stud.InvokeChaincode(fun,toChaincodeArgs(args[0]),args[1])
+		//return stud.InvokeChaincode(fun,toChaincodeArgs(args[0]),args[1])
+		//return shim.Success([]byte("no any more functions"))
+		if len(args) < 1{
+			args[0] = "testB"
+		}
+		return t.hello(stud,args[0])
 	}
 }
 
-func toChaincodeArgs(args ...string) [][]byte {
-	bargs := make([][]byte, len(args))
-	for i, arg := range args {
-		bargs[i] = []byte(arg)
-	}
-	return bargs
+func (t *TestB)hello(stud shim.ChaincodeStubInterface,str string)peer.Response  {
+	return shim.Success([]byte(str))
+
 }
 
-
-
-func (t *TestA)query(stub shim.ChaincodeStubInterface, args []string)peer.Response  {
+func (t *TestB)query(stub shim.ChaincodeStubInterface, args []string)peer.Response  {
 	var A string // Entities
 	var err error
 
