@@ -54,7 +54,7 @@ func toChaincodeArgs(args ...string) [][]byte {
 
 
 
-func (t *SimpleChaincode)query(stub shim.ChaincodeStubInterface, args []string)peer.Response  {
+func (t *SimpleChaincode)query(stub shim.ChaincodeStubInterface, args []string)pb.Response  {
 	var A string // Entities
 	var err error
 
