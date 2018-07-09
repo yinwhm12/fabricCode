@@ -40,7 +40,11 @@ func (t *SimpleChaincode)Invoke(stud shim.ChaincodeStubInterface)pb.Response  {
 	if fun == "query"{
 		return t.query(stud,args)
 	}else{
-		return stud.InvokeChaincode(fun,toChaincodeArgs(args[0]),args[1])
+		channelName := ""
+		if len(args) >= 3{
+			channelName = args[2]
+		}
+		return stud.InvokeChaincode(fun,toChaincodeArgs(args[1]),channelName)
 	}
 }
 

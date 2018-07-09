@@ -42,10 +42,10 @@ func (t *SimpleChaincode)Invoke(stud shim.ChaincodeStubInterface)peer.Response  
 	}else{
 		//return stud.InvokeChaincode(fun,toChaincodeArgs(args[0]),args[1])
 		//return shim.Success([]byte("no any more functions"))
-		if len(args) < 1{
-			args[0] = "SimpleChaincode"
+		if len(args) < 2{
+			args[1] = "SimpleChaincode"
 		}
-		return t.hello(stud,args[0])
+		return t.hello(stud,args[1])
 	}
 }
 
