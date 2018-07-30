@@ -192,9 +192,10 @@ func (t *EncCC) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	case "getRecord":
 		return t.GetRecord(stub,args)
 	case "encRecord":
-		if tMap[ENCKEY] == nil || tMap[IV] == nil{
-			return shim.Error("Please input ENCKEY and IV values")
+		if _, ok := tMap[ENCKEY]; !ok {
+			return shim.Error(fmt.Sprintf("Expected transient encryption key %s", ENCKEY))
 		}
+
 		fmt.Println("enckey:----------------------------------",tMap[ENCKEY],"---------------------len:",len(tMap[ENCKEY]))
 		fmt.Println("iv :----------",tMap[IV],"----------len:",len(tMap[IV]))
 		return t.EncRecord(stub,args,tMap[ENCKEY],tMap[IV])
@@ -206,8 +207,8 @@ func (t *EncCC) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		//}
 		//return shim.Error("Please input ENCKEY and IV values")
 	case "decRecord":
-		if tMap[DECKEY] == nil || tMap[IV] == nil{
-			return shim.Error("Please input ENCKEY and IV values")
+		if _, in := tMap[DECKEY]; !in {
+			return shim.Error(fmt.Sprintf("Expected transient decryption key %s", DECKEY))
 		}
 		return t.DecRecord(stub,args,tMap[DECKEY],tMap[IV])
 		//return t.EncRecord(stub,args,tMap[ENCKEY],tMap[IV])
