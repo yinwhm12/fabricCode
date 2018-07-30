@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"encoding/json"
 	"errors"
-	"strings"
 	"github.com/hyperledger/fabric/bccsp/factory"
 )
 
@@ -22,6 +21,10 @@ type ResumeData struct {
 	WorkPlace string
 	Career string
 }
+
+const DECKEY = "DECKEY"
+const ENCKEY = "ENCKEY"
+const IV = "IV"
 
 func (t *EncCC)Init(stub shim.ChaincodeStubInterface) pb.Response {
 	return shim.Success(nil)
@@ -189,21 +192,30 @@ func (t *EncCC) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	case "getRecord":
 		return t.GetRecord(stub,args)
 	case "encRecord":
-		for k, v := range tMap{
-			if len(strings.TrimSpace(k))<1 || v == nil{
-				return shim.Error("Please input ENCKEY and IV values")
-			}
-			return t.EncRecord(stub,args,[]byte(k),v)
+		if tMap[ENCKEY] == nil || tMap[IV] == nil{
+			return shim.Error("Please input ENCKEY and IV values")
 		}
-		return shim.Error("Please input ENCKEY and IV values")
+		return t.EncRecord(stub,args,tMap[ENCKEY],tMap[IV])
+		//for k, v := range tMap{
+		//	if len(strings.TrimSpace(k))<1 || v == nil{
+		//
+		//	}
+		//	return t.EncRecord(stub,args,[]byte(k),v)
+		//}
+		//return shim.Error("Please input ENCKEY and IV values")
 	case "decRecord":
-		for k, v := range tMap{
-			if len(strings.TrimSpace(k))<1 || v == nil{
-				return shim.Error("Please input ENCKEY and IV values")
-			}
-			return t.DecRecord(stub,args,[]byte(k),v)
+		if tMap[DECKEY] == nil || tMap[IV] == nil{
+			return shim.Error("Please input ENCKEY and IV values")
 		}
-		return shim.Error("Please input ENCKEY and IV values")
+		return t.DecRecord(stub,args,tMap[DECKEY],tMap[IV])
+		//return t.EncRecord(stub,args,tMap[ENCKEY],tMap[IV])
+		//for k, v := range tMap{
+		//	if len(strings.TrimSpace(k))<1 || v == nil{
+		//		return shim.Error("Please input ENCKEY and IV values")
+		//	}
+		//	return t.DecRecord(stub,args,[]byte(k),v)
+		//}
+		//return shim.Error("Please input ENCKEY and IV values")
 	default:
 		return shim.Error(fmt.Sprintf("Unsupported function %s", f))
 	}
@@ -215,5 +227,4 @@ func main()  {
 	if err != nil {
 		fmt.Printf("Error starting EncCC chaincode: %s", err)
 	}
-
 }
