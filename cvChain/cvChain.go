@@ -195,6 +195,8 @@ func (t *EncCC) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		if tMap[ENCKEY] == nil || tMap[IV] == nil{
 			return shim.Error("Please input ENCKEY and IV values")
 		}
+		fmt.Println("enckey:----------------------------------",tMap[ENCKEY],"---------------------len:",len(tMap[ENCKEY]))
+		fmt.Println("iv :----------",tMap[IV],"----------len:",len(tMap[IV]))
 		return t.EncRecord(stub,args,tMap[ENCKEY],tMap[IV])
 		//for k, v := range tMap{
 		//	if len(strings.TrimSpace(k))<1 || v == nil{
